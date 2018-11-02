@@ -4,8 +4,11 @@
 #include <math.h>
 #include <time.h>
 
-
 #define ennemymax 256
+
+// TODO 
+// gestion des ordres rank 1+ 
+// remontée rank 1 vers superieurs (contacts, objectifs)
 
 char phrase[256];
 char reponse[256];
