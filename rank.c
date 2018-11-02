@@ -102,7 +102,39 @@ int moulinette()
 	}
 	perso.posx=a/c;
 	perso.posy=b/c;
-	
+	switch (ordre.order)
+	{
+		case 6 : // rank 1 et plus : defendre le point indiqué (= se deplacer rapidement sur le point puis cibler le plus proche ennemi)
+		{
+			for (i=0;i<nbsubord;i++)
+			{
+				if (subord[i].status==0)
+					break;
+				
+			}
+			break;
+		}
+		case 7 : // rank 1 et plus : capturer le point indiqué (= se deplacer rapidement si aucune cible, sinon lentement et tirer ves l'ennemi le plus proche de la cible et à portée)
+		{
+			for (i=0;i<nbsubord;i++)
+			{
+				if (subord[i].status==0)
+					break;
+				
+			}
+			break;
+		}
+		case 9 : // rank 1 et plus : soutenir (= cibler les ennemis les plus proches du point indiqué)
+		{
+			for (i=0;i<nbsubord;i++)
+			{
+				if (subord[i].status==0)
+					break;
+				
+			}
+			break;
+		}
+	}
 	return 1;
 }
 
@@ -234,7 +266,7 @@ int analyse()
 		ordre.order=atoi(strtok(NULL,":"));
 		switch(ordre.order)
 		{
-			case 1: 
+			case 1: //rank 0 et plus: ordre vide
 			{
 				ordre.posx=perso.posx;
 				ordre.posy=perso.posy;
@@ -242,7 +274,7 @@ int analyse()
 				ordre.ciby=0;
 				break;
 			}
-			case 2 :
+			case 2 : // rank 0 only: tirer sur une cible specifique sans bouger
 			{
 				ordre.posx=perso.posx;
 				ordre.posy=perso.posy;
@@ -250,7 +282,7 @@ int analyse()
 				ordre.ciby=atoi(strtok(NULL,":"));
 				break;
 			}
-			case 3: 
+			case 3: // rank 0 only: bouger et tirer
 			{
 				ordre.posx=atoi(strtok(NULL,":"));
 				ordre.posy=atoi(strtok(NULL,":"));
@@ -258,12 +290,34 @@ int analyse()
 				ordre.ciby=atoi(strtok(NULL,":"));
 				break;
 			}
-			case 4 :
+			case 4 : // rank 0 only : bouger vite sans tirer
 			{
 				ordre.posx=atoi(strtok(NULL,":"));
 				ordre.posy=atoi(strtok(NULL,":"));
 				ordre.cibx=0;
 				ordre.ciby=0;
+				break;
+			}
+			case 5 : // a determiner
+			{
+				break;
+			}
+			case 6 : // rank 1 et plus : defendre le point indiqué (= se deplacer rapidement sur le point puis cibler le plus proche ennemi)
+			{
+				ordre.posx=atoi(strtok(NULL,":"));
+				ordre.posy=atoi(strtok(NULL,":"));
+				break;
+			}
+			case 7 : // rank 1 et plus : capturer le point indiqué (= se deplacer rapidement si aucune cible, sinon lentement et tirer ves l'ennemi le plus proche de la cible et à portée)
+			{
+				ordre.posx=atoi(strtok(NULL,":"));
+				ordre.posy=atoi(strtok(NULL,":"));
+				break;
+			}
+			case 8 : // rank 1 et plus : soutenir (= cibler les ennemis les plus proches du point indiqué)
+			{
+				ordre.posx=atoi(strtok(NULL,":"));
+				ordre.posy=atoi(strtok(NULL,":"));
 				break;
 			}
 		}
