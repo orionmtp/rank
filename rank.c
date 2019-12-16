@@ -35,6 +35,7 @@ struct Order {
 int nbcontact=0;
 int nbsubord=0;
 int nbreport=0;
+int delta_mouv;
 
 int f_min(int a, int b)
 {
@@ -61,9 +62,10 @@ int initie()
 	perso.portee=atoi(strtok(NULL,":"));
 	perso.posx=atoi(strtok(NULL,":"));
 	perso.posy=atoi(strtok(NULL,":"));
-	perso.vitesse=0;
+	perso.vitesse=perso.vitessemax/2;
 	printf("register:%i:%i:%i:%i:%i:%i\n",perso.type,perso.rank,perso.posx,perso.posy,perso.portee,perso.vitessemax);
 	perso.nom=-1;
+	delta_mouv=10;
 	return 1;
 }
 
@@ -83,6 +85,50 @@ int envois()
 
 		
 	return 1;
+}
+
+int cherche_couvert()
+{
+	int i,a,b,a_best,b_best;
+	double angle,hypot1,hypot2,hypot_best;
+
+	hypot_best=(double)delta_mouv+0.1;
+	if (ordre.order==4)
+		perso.vitesse=perso.vitessemax;
+	else
+		perso.vitesse=perso.vitessemax*2;
+	hypot1=sqrt((ordre.posx-perso.posx)*(ordre.posx-perso.posx)+(ordre.posy-perso.posy)*(ordre.posy-perso.posy));
+	if(hypot1<=perso.vitesse)
+	{
+		a=ordre.posx;
+		b=ordre.posy;
+	}
+	else
+	{
+		angle=atan2((double) ordre.posx-perso.posx,(double) ordre.posy-perso.posy);
+		a=perso.posx+(int) (perso.vitesse*cos(angle)); 
+		b=perso.posy+(int) (perso.vitesse*sin(angle));
+	}
+	a_best=a;
+	b_best=b;
+	for (i=0;i<nbcontact;i++)
+	{
+		if (contact[i].type==0)
+		{
+			hypot1=sqrt(((a-contact[i].posx)*(a-contact[i].posx))+((b-contact[i].posy)*(b-contact[i].posy)));
+			hypot2=sqrt(((perso.posx-contact[i].posx)*(perso.posx-contact[i].posx))+((perso.posy-contact[i].posy)*(perso.posy-contact[i].posy)));
+			if ((hypot1<=hypot_best)&&(hypot2<=(double)perso.vitesse))
+			{
+					hypot_best=hypot1;
+					a_best=contact[i].posx;
+					b_best=contact[i].posy;
+			}
+		}
+	}
+	
+	perso.posx=a_best;
+	perso.posy=b_best;
+	
 }
 
 int moulinette()
@@ -124,12 +170,15 @@ int moulinette()
 			}
 			break;
 		}
-		case 9 : // rank 1 et plus : soutenir (= cibler les ennemis les plus proches du point indiqué)
+		case 9 : // rank 1 et plus : soutenir (= cibler les ennemis les plus proches du point indiqué et avancer si aucun ennemi a portee)
 		{
 			for (i=0;i<nbsubord;i++)
 			{
-				if (subord[i].status==0)
-					break;
+				if (subord[i].status!=0)
+				{
+					
+				}
+				
 				
 			}
 			break;
@@ -149,9 +198,7 @@ int execute()
 				perso.vitesse=perso.vitessemax;
 			else
 				perso.vitesse=perso.vitessemax*2;
-			angle=atan2((double) ordre.posx-perso.posx,(double) ordre.posy-perso.posy);
-			perso.posx=perso.posx+(int) (perso.vitesse*cos(angle));
-			perso.posy=perso.posy+(int) (perso.vitesse*sin(angle));
+			cherche_couvert();
 		}
 		if ((ordre.order==2)||(ordre.order==3))
 		{
@@ -170,7 +217,6 @@ int execute()
 
 int analyse()
 {
-	time_t t;
 	int nom,ok,i,a,b,c;
 	
 	if (strstr(phrase,"init"))
@@ -181,23 +227,27 @@ int analyse()
 	if (strstr(phrase,"registered"))
 	{
 		strtok(phrase,":");
-		perso.nom=atoi(strtok(NULL,":"));
+		c=atoi(strtok(NULL,":"));
+		a=atoi(strtok(NULL,":"));
+		b=atoi(strtok(NULL,":"));
+		if((a==perso.posx)&&(b==perso.posy))
+			perso.nom=c;
 		strcpy(phrase," ");
 	}
 	if (strstr(phrase,"register"))
 	{
-		srand((unsigned) time(&t));
 		strtok(phrase,":");
 		subord[nbsubord].type=atoi(strtok(NULL,":"));
 		subord[nbsubord].rank=atoi(strtok(NULL,":"));
 		perso.rank=f_max(perso.rank,subord[nbsubord].rank+1);
+		delta_mouv=10+10*perso.rank;
 		subord[nbsubord].posx=atoi(strtok(NULL,":"));
 		subord[nbsubord].posy=atoi(strtok(NULL,":"));
 		subord[nbsubord].portee=atoi(strtok(NULL,":"));
 		subord[nbsubord].vitessemax=atoi(strtok(NULL,":"));
 		subord[nbsubord].status=1;
 		subord[nbsubord].nom=nbsubord;
-		printf("registered:%i\n",subord[nbsubord].nom);
+		printf("registered:%i:%i:%i\n",subord[nbsubord].nom,subord[nbsubord].posx,subord[nbsubord].posy);
 		nbsubord++;
 		strcpy(phrase," ");
 	}
