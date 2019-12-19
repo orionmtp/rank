@@ -1,6 +1,7 @@
 //programme de generation des ordres pour rank 0 et plus (si besoin)
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #define SOLDAT 9810
 #define DISTANCE 10 //distance entre 2 unités de niveau 0/1. la distance est ensuite calculée en puissance  du rank
@@ -42,15 +43,56 @@ int affecte()
 //maintenant que je sais combien de chaque rang j'ai, je vais devoir les positionner
 int position_depart(int _rank,int _posx,int _posy)
 {
-  int i,j,pop;
-  pop=rank[_rank-1];
+  int i,j,a,b;
+  double dist;
+  int angle;
+	
   affecte(_rank,1,6,200,_posx,posy);
-  while (pop!=0)
+  sol
+	  
+	  dats++;
+  if (unite==soldats)
   {
-    
-    pop--;
+  if(_rank>2)
+  {
+    for (i=0;i<4;i++)
+    {
+      angle=rand(360);
+      dist=rand(pow(10,_rank));
+	a=(int)round(_posx+dist*sin(angle));
+	b=(int)round(_posy+dist*cos(angle));
+      position_depart(_rank-1,a,b);
+    }
   }
-  
+  else
+  {
+	if(_rank==2)
+        {
+    		for (i=0;i<3;i++)
+    		{
+      			angle=rand(360);
+      			dist=rand(pow(10,_rank));
+	a=(int)round(_posx+dist*sin(angle));
+	b=(int)round(_posy+dist*cos(angle));
+      			position_depart(_rank-1,a,b);
+    		}
+      	}
+	else
+	{
+	if(_rank==1)
+        {
+    		for (i=0;i<10;i++)
+    		{
+      			angle=rand(360);
+      			dist=rand(pow(10,_rank));
+	a=(int)round(_posx+dist*sin(angle));
+	b=(int)round(_posy+dist*cos(angle));
+      			position_depart(_rank-1,a,b);
+    		}
+      	}	
+	}
+  }
+  }
   return 0;
 }
 
@@ -139,7 +181,7 @@ if (unite==1)
                 rank[0]=unite-1365;
                 rank_max=6;
               }
-  position_depart(rank_max,1000,1000);
+  position_depart(rank_max,0,0);
   return 0;
 }
 
