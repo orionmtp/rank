@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define RANK 9810
+#define SOLDAT 9810
 #define DISTANCE 10 //distance entre 2 unités de niveau 0/1. la distance est ensuite calculée en puissance  du rank
 
 //format :
@@ -21,10 +21,41 @@
 // contact : 
 
 int rank[7];
-int unite;
+int unite,soldats;
 int rank_max;
+struct generation {
+  	int rank;
+	int posx;
+	int posy;
+	int type;
+	int vitesse;
+	int vitessemax;
+	int portee;
+} gen[SOLDAT];
 
-void init() // je fais un init du nombre de soldats de chaque niveau
+//
+int affecte()
+{
+  return 0;
+}
+
+//maintenant que je sais combien de chaque rang j'ai, je vais devoir les positionner
+int position_depart(int _rank,int _posx,int _posy)
+{
+  int i,j,pop;
+  pop=rank[_rank-1];
+  affecte(_rank,1,6,200,_posx,posy);
+  while (pop!=0)
+  {
+    
+    pop--;
+  }
+  
+  return 0;
+}
+
+
+int init() // je fais un init du nombre de soldats de chaque niveau
 {
 if (unite==1)
 {
@@ -108,31 +139,36 @@ if (unite==1)
                 rank[0]=unite-1365;
                 rank_max=6;
               }
+  position_depart(rank_max,1000,1000);
   return 0;
 }
 
 
+
+
 int main (int argc, char **argv)
 {
-  int unite;
-  int rank[7];
   int i=0;
   
+  srand(time(NULL));
+  soldats=0;
   rank_max=0;
+  
   if (argc<2)
   {
-    printf("usage : $s <nb de soldats>\n max 9810");
-    exit 1;
+    printf("usage : $s <nb de soldats> (max %i)\n",argc[0],SOLDAT);
+    unite=1;
   }
   else
   {
 
-    if (argv[1]>9810)
+    if (argv[1]>SOLDAT)
     {
-      printf("usage : $s <nb de soldats>\n max 9810");
-      exit 1;
+      printf("usage : $s <nb de soldats> (max %i)\n",argc[0],SOLDAT);
+      unite=SOLDAT;
     }
-    unite=atoi(argv[1]);
+    else
+      unite=atoi(argv[1]);
     init();
   }
 //  for (i=0;i<unite;i++)
